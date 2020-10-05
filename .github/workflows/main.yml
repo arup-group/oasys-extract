@@ -5,11 +5,9 @@ name: Create Extract
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version of the installer to make'     
-        required: true
+  push:
+    branches: 
+      - master
         
 defaults:
   run:
@@ -22,11 +20,27 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
+
+      - uses: paulhatch/semantic-version@v3
+        id: semanticVersion
+        with:
+          # The branch to count commits on
+          branch: "master"
+              # A string which, if present in a git commit, indicates that a change represents a
+          # major (breaking) change
+          major_pattern: "(MAJOR)"
+          # Same as above except indicating a minor change
+          minor_pattern: "(MINOR)"
+          # A string to determine the format of the version output
+          format: "${major}.${minor}.${patch}"
+          # Optional path to check for changes. If any changes are detected in the path the
+          # 'changed' output will true. Enter multiple paths separated by spaces.
+          change_path: "extract"
         
       - name: Calculate tag version
         id: calculateTagVersion
         run: |
-          $tag = "${{ github.event.inputs.version }}.$($env:GITHUB_RUN_ID%65536)"
+          $tag = "${{ steps.semanticVersion.outputs.version }}.$($env:GITHUB_RUN_ID%65536)"
           echo "::set-output name=tag::$tag"
     
       - name: Restore Extract NuGets
@@ -58,6 +72,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create-release.outputs.upload_url }}  
-          asset_path: ./extract/extract.exe
+          asset_path: ./extract/x64/Release/Extract.exe
           asset_name: extract.exe
           asset_content_type: application/vnd.microsoft.portable-executable
