@@ -20,7 +20,7 @@ struct CommandLineOptions
 
 static void ShowUsage(std::string name)
 {
-    std::cerr << "Usage: " << name << " <option> input output"
+    std::cerr << "Usage: " << name << " <option> input output\n"
         << "Options:\n"
         << "\t-h,--help\tShow this help message\n"
         << "\t-b,--brief\tSpecify brief output"
@@ -72,7 +72,8 @@ static int ProcessCommandLine(int argc, char* argv[], CommandLineOptions& option
 int main(int argc, char* argv[])
 {
     CommandLineOptions options;
-    ProcessCommandLine(argc, argv, options);
+    if( ProcessCommandLine(argc, argv, options)>0 )
+        exit(EXIT_SUCCESS);
 
     std::cout << argv[0] << '\n';
 
