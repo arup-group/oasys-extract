@@ -184,6 +184,8 @@ bool CExtractData::Assemble()
 bool CExtractData::Extract()
 {
 	bool status = true;
+	auto split = m_listPath.rfind("\\");
+	std::string root = m_listPath.substr(0, split + 1);
 
 	for (auto& inputPath : m_inputPaths)
 	{
@@ -192,8 +194,9 @@ bool CExtractData::Extract()
 
 		try
 		{
-			std::filesystem::path path = inputPath;
-			inputFile.open(inputPath, std::ios::in);
+			std::string fullPath = root + inputPath;
+			std::filesystem::path path = fullPath;
+			inputFile.open(fullPath, std::ios::in);
 			if( !ExtractFile(inputFile))
 				status = false;
 			inputFile.close();
