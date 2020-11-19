@@ -47,7 +47,7 @@ jobs:
         run: nuget restore
         
       - name: Add MSBuild to the path
-        uses: microsoft/setup-msbuild@v1.0.1
+        uses: microsoft/setup-msbuild@v1.0.2
         
       - name: Compile Extract in Release configuration
         run: msbuild extract.sln /property:Configuration=Release
