@@ -185,14 +185,18 @@ bool CExtractData::Extract()
 {
 	bool status = true;
 
-	for (auto& inputPath : m_inputPaths)
+	for (auto inputPath : m_inputPaths)
 	{
+#ifdef _DEBUG
+		inputPath = std::string("C:\\dev\\oasys-develop\\") + inputPath;
+#endif
 		bool status = true;
 		std::ifstream inputFile;
 
 		try
 		{
 			std::filesystem::path path = inputPath;
+			//path = std::filesystem::absolute(path);
 			inputFile.open(inputPath, std::ios::in);
 			if( !ExtractFile(inputFile))
 				status = false;
@@ -380,6 +384,8 @@ bool CExtractData::WriteFile(std::ofstream& htmlFile)
 			"<p class=\"index\" /*style=\"font-size:90%\"*/><a href=\"#index\">Index</a></p>\n"
 			"<hr style=\"color:black;background-color:black;height:1px;border:0;\" />\n";
 	}
+
+	std::sort(m_items.begin(), m_items.end());
 
 	// Body
 	for (const auto& item : m_items)
@@ -749,6 +755,7 @@ std::string CExtractData::GetParameterList(const std::string& line, size_t& inde
 		{
 			table += "</table>\n";
 			index = iStart;
+			findReplace(table, "<a_href", "<a href");
 			return table;
 		}
 
@@ -790,7 +797,7 @@ std::string CExtractData::GetParameterList(const std::string& line, size_t& inde
 		std::string value = subString;
 		std::string desc;
 		auto tab = findMatch(subString, " \t");
-		if (tab > 0)
+		if (tab != std::string::npos)
 		{
 			value = left(subString, tab);
 			desc = subString.substr(tab + 1);
@@ -806,6 +813,7 @@ std::string CExtractData::GetParameterList(const std::string& line, size_t& inde
 	}
 
 	table += "</table>\n";
+	findReplace(table, "<a_href", "<a href");
 	index = i;
 
 	return table;
