@@ -384,6 +384,8 @@ bool CExtractData::WriteFile(std::ofstream& htmlFile)
 			"<hr style=\"color:black;background-color:black;height:1px;border:0;\" />\n";
 	}
 
+	std::sort(m_items.begin(), m_items.end());
+	
 	// Body
 	for (const auto& item : m_items)
 	{
