@@ -175,7 +175,10 @@ bool CExtractData::Assemble()
 			m_intro += "\r\n";
 		}
 		else
+		{
 			m_intro += line;
+			m_intro += " ";
+		}
 	}
 	listFile.close();
 

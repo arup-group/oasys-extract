@@ -5,7 +5,11 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LocalDebuggerCommandArguments>C:\dev\oasys-combined\gsa\gwdat\gsa_textfile.lst C:\dev\oasys-combined\gsa\gwdat\gsa_htmlfile.html</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>C:\dev\oasys-combined\gsa_extract.lst C:\dev\oasys-combined\gsa_htmlfile.html</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LocalDebuggerCommandArguments>C:\dev\oasys-combined\gsa_extract.lst C:\dev\oasys-combined\gsa_htmlfile.html</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>
