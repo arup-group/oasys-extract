@@ -187,20 +187,19 @@ bool CExtractData::Assemble()
 bool CExtractData::Extract()
 {
 	bool status = true;
+	auto split = m_listPath.rfind("\\");
+	std::string root = m_listPath.substr(0, split + 1);
 
-	for (auto inputPath : m_inputPaths)
+	for (auto& inputPath : m_inputPaths)
 	{
-#ifdef _DEBUG
-		inputPath = std::string("C:\\dev\\oasys-develop\\") + inputPath;
-#endif
 		bool status = true;
 		std::ifstream inputFile;
 
 		try
 		{
-			std::filesystem::path path = inputPath;
-			//path = std::filesystem::absolute(path);
-			inputFile.open(inputPath, std::ios::in);
+			std::string fullPath = root + inputPath;
+			std::filesystem::path path = fullPath;
+			inputFile.open(fullPath, std::ios::in);
 			if( !ExtractFile(inputFile))
 				status = false;
 			inputFile.close();
@@ -389,7 +388,7 @@ bool CExtractData::WriteFile(std::ofstream& htmlFile)
 	}
 
 	std::sort(m_items.begin(), m_items.end());
-
+	
 	// Body
 	for (const auto& item : m_items)
 	{
@@ -758,7 +757,6 @@ std::string CExtractData::GetParameterList(const std::string& line, size_t& inde
 		{
 			table += "</table>\n";
 			index = iStart;
-			findReplace(table, "<a_href", "<a href");
 			return table;
 		}
 
@@ -800,7 +798,7 @@ std::string CExtractData::GetParameterList(const std::string& line, size_t& inde
 		std::string value = subString;
 		std::string desc;
 		auto tab = findMatch(subString, " \t");
-		if (tab != std::string::npos)
+		if (tab > 0)
 		{
 			value = left(subString, tab);
 			desc = subString.substr(tab + 1);
@@ -816,7 +814,6 @@ std::string CExtractData::GetParameterList(const std::string& line, size_t& inde
 	}
 
 	table += "</table>\n";
-	findReplace(table, "<a_href", "<a href");
 	index = i;
 
 	return table;
